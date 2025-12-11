@@ -1,0 +1,71 @@
+!==============================
+! ISP Router Configuration
+!==============================
+
+enable
+configure terminal
+
+! Configure loopback interfaces to simulate the Internet
+interface loopback 1
+ ip address 8.8.8.8 255.255.255.255
+ exit
+
+interface loopback 2
+ ip address 1.1.1.1 255.255.255.255
+ exit
+
+! Configure WAN interface towards NAT-Router
+interface gig0/0
+ ip address 100.1.1.2 255.255.255.252
+ no shutdown
+ exit
+
+! Add route to NAT public IP-Pool purchased for internel network
+ip route 200.1.1.0 255.255.255.252 100.1.1.1
+exit
+
+!==============================
+! NAT-Router Configuration
+!==============================
+
+enable
+configure terminal
+
+! Configure WAN interface towards ISP
+interface gig0/1
+ ip address 100.1.1.1 255.255.255.252
+ no shutdown
+ exit
+
+! Configure LAN interface towards internal network
+interface gig0/0
+ ip address 192.168.1.100 255.255.255.0
+ no shutdown
+ exit
+
+! Configure default route towards ISP
+ip route 0.0.0.0 0.0.0.0 100.1.1.2
+
+! Configure NAT boundaries
+interface gig0/0
+ ip nat inside
+ exit
+
+interface gig0/1
+ ip nat outside
+ exit
+
+! Configure Dynamic NAT for Internel Network
+access-list 1 permit 192.168.1.0 0.0.0.255
+ip nat pool pool1 200.1.1.1 200.1.1.2 netmask 255.255.255.252
+ip nat inside source list 1 pool pool1
+
+!==============================
+! Verification Commands
+!==============================
+show ip nat translations
+show ip nat statistics
+
+!==============================
+! End of Configuration
+!==============================
