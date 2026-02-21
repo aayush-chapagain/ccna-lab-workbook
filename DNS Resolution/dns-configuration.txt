@@ -1,0 +1,94 @@
+=====================================================
+DNS RESOLUTION LAB  CONFIGURATION DOCUMENTATION
+=====================================================
+
+OBJECTIVE:
+Configure static hostname resolution and DNS-based name resolution
+in a simulated enterprise topology using Packet Tracer.
+
+-----------------------------------------------------
+1 STATIC HOSTNAME CONFIGURATION (LOCAL HOST TABLE)
+-----------------------------------------------------
+
+Used to manually map a hostname to an IP address.
+
+Router Configuration:
+
+R1# configure terminal
+R1(config)# ip host R2 10.1.1.1
+R1(config)# end
+
+Verify Static Host Table:
+
+R1# show hosts
+
+-----------------------------------------------------
+2 CONFIGURE EXTERNAL DNS SERVER
+-----------------------------------------------------
+
+Define the DNS server IP address for name resolution.
+
+Router Configuration:
+
+R1# configure terminal
+R1(config)# ip name-server 192.168.3.2
+R1(config)# end
+
+Verification:
+
+R1# show running-config | include name-server
+
+-----------------------------------------------------
+3 DNS SERVER CONFIGURATION (Packet Tracer Server)
+-----------------------------------------------------
+
+On DNS Server Device:
+
+1. Go to Services tab
+2. Select DNS
+3. Turn DNS Service ON
+4. Add DNS Records:
+
+   Name: R2
+   Address: 10.1.1.1
+
+-----------------------------------------------------
+4 PC DNS CONFIGURATION
+-----------------------------------------------------
+
+On PC Device:
+
+Desktop  IP Configuration
+
+Set:
+
+IP Address: (According to topology)
+Subnet Mask: (According to topology)
+Default Gateway: (Router interface IP)
+DNS Server: 192.168.3.2
+
+-----------------------------------------------------
+5 TEST NAME RESOLUTION
+-----------------------------------------------------
+
+From Router:
+
+R1# ping R2
+R1# ping server.local
+
+From PC Command Prompt:
+
+> ping R2
+
+-----------------------------------------------------
+EXPECTED RESULT
+-----------------------------------------------------
+
+ Static host resolution works locally via "ip host"
+ DNS queries are sent to 192.168.3.2
+ Name resolution successful via DNS server
+ Ping and connectivity verified
+
+=====================================================
+END OF CONFIGURATION
+=====================================================
