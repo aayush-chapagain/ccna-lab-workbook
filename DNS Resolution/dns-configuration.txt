@@ -74,7 +74,6 @@ DNS Server: 192.168.3.2
 From Router:
 
 R1# ping R2
-R1# ping server.local
 
 From PC Command Prompt:
 
